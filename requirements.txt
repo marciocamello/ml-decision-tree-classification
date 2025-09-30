@@ -8,3 +8,7 @@ scikit-learn
 optuna
 ipywidgets
 gradio
+fastapi
+uvicorn
+pydantic
+joblib
