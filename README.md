@@ -58,84 +58,168 @@ preds = model.predict(df)
 df['predicao'] = preds
 df.to_csv('predicoes.csv', index=False)
 
-print('Inferência finalizada — arquivo gerado: predicoes.csv')
+
+# 📊 Projeto: Classificação — Árvore de Decisão (Decision Tree)
+
+## 📚 Sobre o projeto
+
+Este repositório implementa um modelo de classificação usando Árvore de Decisão (sklearn). É um projeto prático alinhado ao módulo "Classificação — Árvore de Decisão" da formação "Machine Learning em Inteligência Artificial" (Rocketseat). O objetivo é mostrar todo o fluxo: EDA, pré-processamento, treino, avaliação, persistência do modelo e inferência em batch.
+
+### 🎯 Problema a ser resolvido
+
+• Variáveis de entrada: atributos das empresas (dados em `datasets/segmento_clientes.csv`)
+• Variável alvo (y): segmento/label de classificação (ver notebook para o nome exato da coluna)
+• Objetivo: treinar um modelo que classifique corretamente o segmento de uma empresa com base nas suas features.
+
+## 🛠️ Tecnologias utilizadas
+
+• Python 3.11+
+• Pandas, NumPy — manipulação de dados
+• Scikit-learn — DecisionTreeClassifier, métricas e utilitários
+• Matplotlib/Seaborn — visualização (usado no notebook)
+• Pipenv — gerenciamento de dependências (Pipfile presente)
+
+> Observação: se você quiser uma API/serviço, podemos adicionar FastAPI e Uvicorn (opcional).
+
+## 📁 Estrutura do projeto
+
 ```
 
-Observação: o pré-processamento deve ser idêntico ao aplicado durante o treinamento. Se você usou pipelines (sklearn Pipeline) e salvou o pipeline completo junto com o modelo, o carregamento e uso ficam mais simples.
+ml-decision-tree-classification/
+├── datasets/
+│ ├── segmento_clientes.csv # dataset usado para treino/EDA
+│ └── novas_empresas.csv # amostras para inferência em batch
+├── classificacao_segment_empresa.ipynb # notebook: EDA → treino → avaliação
+├── modelo_classficacao_decision_tree.pkl # modelo treinado serializado
+├── predicoes.csv # exemplo de saída gerada em inferência
+├── Pipfile
+├── Pipfile.lock
+└── README.md
 
-## Mapeamento do projeto para o conteúdo do curso Rocketseat
+```
 
-O módulo "Classificação Árvore de Decisão" (Rocketseat) cobre teoria e prática que se alinham diretamente às etapas acima. Pontos principais do curso que você deve estudar e relacionar com o projeto:
+## 🧠 Conceitos de Machine Learning aplicados
 
-- Conceitos de classificação: problemas binários vs multiclasse — relação com seu rótulo alvo.
-- EDA focada em classificação: análise de distribuição das classes, balanceamento e técnicas de amostragem (undersampling/oversampling).
-- Pré-processamento: codificação de variáveis categóricas, tratamento de valores nulos, normalização quando necessário.
-- Teoria de Árvores de Decisão: entropia, ganho de informação, índice Gini, como função de divisão escolhe splits.
-- Tamanho/complexidade da árvore: profundidade máxima, min_samples_split, min_samples_leaf — relação com overfitting/underfitting.
-- Avaliação de modelos de classificação: acurácia, precision, recall, f1-score, matriz de confusão, curva ROC/AUC (quando aplicável).
-- Validação: holdout, k-fold cross-validation, validação estratificada para classes desbalanceadas.
-- Otimização de hiperparâmetros: GridSearchCV / RandomizedSearchCV e interpretação dos resultados.
-- Persistência e inferência: serializar com pickle, joblib; pipeline para manter transformações.
-- Entregáveis práticos vistos no curso: inferência batch, criação de API (FastAPI/Flask) e deploy simples.
+• Classificação: árvore de decisão — splits baseados em Gini/Entropy
+• Validação: holdout (train/test) e possibilidade de k-fold estratificado
+• Métricas: acurácia, precision, recall, f1-score, matriz de confusão
+• Overfitting vs Underfitting: controle por `max_depth`, `min_samples_leaf`, etc.
 
-Links úteis do conteúdo Rocketseat (módulos referenciados):
+## 📈 Processo de Machine Learning implementado
 
-- Página do curso: https://app.rocketseat.com.br/journey/machine-learning-em-inteligencia-artificial/contents
-- Módulo Classificação Árvore de Decisão: https://app.rocketseat.com.br/classroom/classificacao-arvore-de-decisao
+1. Carregamento dos dados e EDA (inspeção, estatísticas, gráficos)
+2. Tratamento de valores faltantes e codificação de categóricas
+3. Separação treino/teste (com `random_state` fixo)
+4. Treinamento de `DecisionTreeClassifier`
+5. Avaliação com métricas e matriz de confusão
+6. Salvamento do modelo (`pickle`) em `modelo_classficacao_decision_tree.pkl`
+7. Inferência em batch em `datasets/novas_empresas.csv` → `predicoes.csv`
 
-> Dica prática: acompanhe cada vídeo/aula do módulo e, ao final de cada aula, abra o notebook `classificacao_segment_empresa.ipynb` e vincule o que foi visto (por exemplo, após a aula sobre Gini/Entropy, localize a célula do treinamento e experimente trocar o parâmetro `criterion`).
+## 📊 Dataset
 
-## O que já foi feito (checklist)
+Arquivo principal: `datasets/segmento_clientes.csv` — abra o notebook para ver as colunas e amostras. Se precisar, adicione uma amostra mínima abaixo para referência.
 
-- [x] Carregamento dos dados e EDA inicial.
-- [x] Pré-processamento básico aplicado.
-- [x] Treinamento de Decision Tree e avaliação básica.
-- [x] Salvamento do modelo em `modelo_classficacao_decision_tree.pkl`.
-- [x] Geração de um arquivo exemplo `predicoes.csv` com inferência.
+Exemplo de visualização (no notebook):
+```
 
-## Exercícios e estudos recomendados (práticos)
+... mostra as primeiras linhas com .head() ...
 
-1. Reproduzir o experimento trocando `criterion` entre `gini` e `entropy` e comparar métricas.
-2. Implementar k-fold cross-validation estratificada e comparar variações de `max_depth`, `min_samples_leaf`.
-3. Construir um sklearn Pipeline que inclua pré-processamento e modelo; salvar o pipeline inteiro e usar para inferência.
-4. Plotar a árvore com `sklearn.tree.plot_tree` e interpretar os splits mais importantes.
-5. Calcular importance das features (`feature_importances_`) e documentar as 5 mais relevantes.
-6. Testar técnicas para lidar com classes desbalanceadas (SMOTE, class_weight) e medir impacto.
-7. Criar uma API simples (FastAPI) que receba JSON com uma amostra e retorne a predição.
+````
 
-## Próximos passos sugeridos
+## 🚀 Como executar o projeto
 
-- Refinar features e adicionar engenharia de domínio (se houver conhecimento sobre as empresas no dataset).
-- Implementar e comparar RandomForest e outros ensembles (módulo posterior do curso) para ver ganho de performance.
-- Aplicar hyperparameter tuning com RandomizedSearchCV/Optuna para acelerar busca.
-- Adicionar testes automáticos simples (por exemplo, teste que checa se o pipeline salva/carrega e produz mesmo shape de saída).
-- Documentar decisões: um arquivo `NOTES.md` com experimentos e métricas comparadas (boa prática para portfólio).
+1. Instalar Pipenv (se não tiver):
 
-## Boas práticas e cuidados
+```powershell
+pip install pipenv
+````
 
-- Sempre versionar os pré-processamentos (pipelines) junto com o modelo.
-- Fixar seeds (random_state) para reprodutibilidade.
-- Salvar exemplos de entrada e saída (samples de `novas_empresas.csv` e `predicoes.csv`).
-- Evitar vazamento de dados: aplicar transformações aprendidas no treino apenas com dados de treino.
+2. Instalar dependências e abrir ambiente (PowerShell):
 
-## Como estudar usando este projeto e o curso da Rocketseat
+```powershell
+pipenv install --dev
+pipenv shell
+```
 
-1. Assista às aulas do módulo "Classificação Árvore de Decisão" seguindo a ordem sugerida pela Rocketseat.
-2. Após cada aula teórica, abra o notebook e aplique a mudança correspondente (ex.: após a aula de EDA, adicione novas visualizações; após a aula de pruning, experimente parâmetros).
-3. Anote insights e métricas em `NOTES.md` (experimento, parâmetros, métricas, observações).
-4. Ao terminar o módulo, execute os exercícios práticos listados acima e compare resultados.
+3. Rodar Jupyter Notebook e abrir o notebook de análise:
 
-## Contato / Referências
+```powershell
+jupyter notebook classificacao_segment_empresa.ipynb
+```
 
-- Rocketseat — Machine Learning em Inteligência Artificial: https://app.rocketseat.com.br/journey/machine-learning-em-inteligencia-artificial/contents
+### Inferência rápida a partir do modelo salvo
+
+Se quiser apenas gerar predições no arquivo `datasets/novas_empresas.csv`, crie um script `inferencia_batch.py` (exemplo abaixo) e execute dentro do mesmo ambiente:
+
+```python
+import pandas as pd
+import pickle
+
+# carregar dados
+df = pd.read_csv('datasets/novas_empresas.csv')
+
+# ATENÇÃO: aplicar as mesmas transformações usadas no treinamento
+# Exemplo mínimo: selecionar colunas esperadas pelo modelo
+# df = df[ ['col1','col2', ...] ]
+
+with open('modelo_classficacao_decision_tree.pkl','rb') as f:
+    model = pickle.load(f)
+
+preds = model.predict(df)
+df['predicao'] = preds
+df.to_csv('predicoes.csv', index=False)
+print('Arquivo gerado: predicoes.csv')
+```
+
+## 🔁 API / Deploy (opcional)
+
+No momento este repositório não inclui uma API pronta. Se quiser, eu posso adicionar um pequeno `api_modelo.py` com FastAPI e um `api_main.py` (similar ao padrão do seu outro repo), que:
+
+- carrega o modelo serializado
+- expõe um endpoint POST `/predict` que recebe JSON com uma amostra e retorna a predição
+
+### Exemplos de uso da API (após adicionar FastAPI):
+
+- `uvicorn api_modelo:app --reload --port 8000`
+- Documentação automática: `http://localhost:8000/docs`
+
+## 📝 Material de estudo recomendado (Rocketseat)
+
+- Módulo: Classificação — Árvore de Decisão (Rocketseat): https://app.rocketseat.com.br/classroom/classificacao-arvore-de-decisao
 - Scikit-Learn — Decision Trees: https://scikit-learn.org/stable/modules/tree.html
+- Conceitos: Entropia, Gini, Overfitting/Pruning, Validação cruzada, Feature importance
+
+## ✅ Resumo para estudo rápido
+
+O que foi implementado:
+
+- Modelo Decision Tree treinado e salvo
+- Notebook com EDA e avaliação
+- Exemplo de inferência em batch (arquivo `predicoes.csv`)
+
+Como testar rapidamente:
+
+1. `pipenv install --dev`
+2. `pipenv shell`
+3. `jupyter notebook classificacao_segment_empresa.ipynb` ou executar `inferencia_batch.py` para gerar `predicoes.csv`
+
+## 🤝 Como contribuir
+
+1. Fork o projeto
+2. Crie uma branch (`git checkout -b feature/nome-da-feature`)
+3. Commit e push
+4. Abra um Pull Request
+
+## 📝 Licença
+
+Este projeto pode usar a licença MIT. Se quiser, adiciono o arquivo `LICENSE`.
 
 ---
 
-Se quiser, eu posso:
+Se quiser, posso agora:
 
-- gerar um `inferencia_batch.py` pronto com o pré-processamento baseado no notebook;
-- criar um `requirements.txt` a partir do `Pipfile`;
-- adicionar um `NOTES.md` com um template para experimentos e um pequeno script de avaliação automatizada.
+- gerar o script `inferencia_batch.py` automaticamente com base no pré-processamento do notebook;
+- gerar um `requirements.txt` a partir do `Pipfile`;
+- adicionar `api_modelo.py` + `api_main.py` com FastAPI seguindo o padrão do seu repo de regressão.
 
-Diga qual dessas tarefas quer que eu faça agora e eu executo aqui no repositório.
+Diga qual ação prefere que eu faça a seguir e eu implemento.
